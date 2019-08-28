@@ -13,7 +13,7 @@
 
 #include <stdio.h>
 #include <tchar.h>
-#include <Windows.h>
+#include <windows.h>
 #include <stdio.h>
 #include <conio.h>
 #include <io.h>

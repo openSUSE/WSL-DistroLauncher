@@ -1,0 +1,4 @@
+#pragma once
+
+static const wchar_t * DISTRO_NAME = L"@DISTRO_ID@";
+static const wchar_t * DISTRO_DISPLAY_NAME = L"@DISTRO_NAME@";
