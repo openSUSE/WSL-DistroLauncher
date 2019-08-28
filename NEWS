@@ -1,0 +1,36 @@
+What's NEWs?
+=====================================================================
+This file comprises a basic version history for the adaptations 
+created by SUSE for the WSL-DistroLauncher code created by Microsoft.
+
+- Original Code: https://github.com/Microsoft/WSL-DistroLauncher
+- SUSE Adaptations: https://build.opensuse.org/package/show/Virtualization:WSL/wsl-launcher
+
+The Open Build Service project that SUSE uses to build openSUSE 
+for Windows Subsystem for Linux can be found at:
+https://build.opensuse.org/package/show/Virtualization:WSL
+
+The versions listed below are listed in reverse chronilogical
+order; meaning the newest is at the top.
+
+> Bon appetit!
+  - Dennis Ritchie, Anti-Forward to the UNIX-HATERS Handbook
+
+
+Version 1.1.0
+---------------------------------------------------------------------
+`Tue, 13 Aug 2019  07:23:59 -0700`<br>
+`sle-ms \at\ suse \dot\ com`
+
+1. Changed the `NEWS` file to markdown format.
+1. Rebased the code from Microsoft;
+   See "Original Code" reference at top.
+
+Version 1.0.0
+---------------------------------------------------------------------
+`Wed, 11 Oct 2017 14:00:30 +0200`<br>
+Cedric Bosdannat: `<cedric \dot\ bosdonnat \at\ free \dot\ fr>`
+
+1. Created project
+1. Ease build using GNU and mingw toolchain
+
