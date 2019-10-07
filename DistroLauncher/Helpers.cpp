@@ -16,16 +16,19 @@ std::wstring Helpers::GetUserInput(DWORD promptMsg, DWORD maxCharacters)
     size_t bufferSize = maxCharacters + 1;
     std::unique_ptr<wchar_t[]> inputBuffer(new wchar_t[bufferSize]);
     std::wstring input;
-    if (wscanf_s(L"%s", inputBuffer.get(), (unsigned int)bufferSize) == 1) {
+    if (fgetws(inputBuffer.get(), (unsigned int)bufferSize, stdin) != NULL) {
         input = inputBuffer.get();
     }
 
+// XXX: check if that if needed. It's blocking as it is ...
+#if 0
     // Throw away any additional chracters that did not fit in the buffer.
     wchar_t wch;
     do {
         wch = getwchar();
 
     } while ((wch != L'\n') && (wch != WEOF));
+#endif
 
     return input;
 }

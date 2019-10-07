@@ -13,6 +13,7 @@
 
 #include <stdio.h>
 #include <tchar.h>
+#include <sec_api/wchar_s.h>
 #include <windows.h>
 #include <stdio.h>
 #include <conio.h>
