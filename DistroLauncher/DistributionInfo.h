@@ -24,4 +24,10 @@ namespace DistributionInfo
 
     // Query the UID of a given user account
     ULONG QueryUid(std::wstring_view userName);
+
+    // Query the UID of the user account created on first boot
+    ULONG QueryFistBootUid();
+
+    // Configure distribution on first start
+    bool FirstBoot();
 }
