@@ -66,3 +66,21 @@ ULONG DistributionInfo::QueryUid(std::wstring_view userName)
     command += userName;
     return _QueryUid(command);
 }
+
+bool DistributionInfo::FirstBoot()
+{
+    DWORD exitCode;
+    std::wstring commandLine = L"/usr/lib/YaST2/startup/YaST2.call firstboot firstboot";
+    HRESULT hr = g_wslApi.WslLaunchInteractive(commandLine.c_str(), true, &exitCode);
+    if ((FAILED(hr)) || (exitCode != 0)) {
+        return false;
+    }
+
+    return true;
+}
+
+ULONG DistributionInfo::QueryFistBootUid()
+{
+    std::wstring command = L"cat /run/wsl_firstboot_uid";
+    return _QueryUid(command);
+}

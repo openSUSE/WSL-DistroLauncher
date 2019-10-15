@@ -5,11 +5,10 @@
 
 #include "stdafx.h"
 
-// Commandline arguments: 
+// Commandline arguments:
 #define ARG_CONFIG              L"config"
 #define ARG_CONFIG_DEFAULT_USER L"--default-user"
 #define ARG_INSTALL             L"install"
-#define ARG_INSTALL_ROOT        L"--root"
 #define ARG_RUN                 L"run"
 #define ARG_RUN_C               L"-c"
 
@@ -17,10 +16,10 @@
 // https://msdn.microsoft.com/en-us/library/windows/desktop/mt826874(v=vs.85).aspx
 WslApiLoader g_wslApi(DistributionInfo::Name);
 
-static HRESULT InstallDistribution(bool createUser);
+static HRESULT InstallDistribution();
 static HRESULT SetDefaultUser(std::wstring_view userName);
 
-HRESULT InstallDistribution(bool createUser)
+HRESULT InstallDistribution()
 {
     // Register the distribution.
     Helpers::PrintMessage(MSG_STATUS_INSTALLING);
@@ -36,19 +35,13 @@ HRESULT InstallDistribution(bool createUser)
         return hr;
     }
 
-    // Create a user account.
-    if (createUser) {
-        Helpers::PrintMessage(MSG_CREATE_USER_PROMPT);
-        std::wstring userName;
-        do {
-            userName = Helpers::GetUserInput(MSG_ENTER_USERNAME, 32);
-
-        } while (!DistributionInfo::CreateUser(userName));
-
-        // Set this user account as the default.
-        hr = SetDefaultUser(userName);
-        if (FAILED(hr)) {
-            return hr;
+    if (DistributionInfo::FirstBoot()) {
+        ULONG uid = DistributionInfo::QueryFistBootUid();
+        if (uid != UID_INVALID) {
+            HRESULT hr = g_wslApi.WslConfigureDistribution(uid, WSL_DISTRIBUTION_FLAGS_DEFAULT);
+            if (FAILED(hr)) {
+                return hr;
+            }
         }
     }
 
@@ -99,9 +92,7 @@ int wmain(int argc, wchar_t const *argv[])
     HRESULT hr = S_OK;
     if (!g_wslApi.WslIsDistributionRegistered()) {
 
-        // If the "--root" option is specified, do not create a user account.
-        bool useRoot = ((installOnly) && (arguments.size() > 1) && (arguments[1] == ARG_INSTALL_ROOT));
-        hr = InstallDistribution(!useRoot);
+        hr = InstallDistribution();
         if (FAILED(hr)) {
             if (hr == HRESULT_FROM_WIN32(ERROR_ALREADY_EXISTS)) {
                 Helpers::PrintMessage(MSG_INSTALL_ALREADY_EXISTS);
