@@ -19,7 +19,7 @@ bool DistributionInfo::CreateUser(std::wstring_view userName)
     return true;
 }
 
-ULONG DistributionInfo::QueryUid(std::wstring_view userName)
+static ULONG _QueryUid(std::wstring command)
 {
     // Create a pipe to read the output of the launched process.
     HANDLE readPipe;
@@ -27,9 +27,6 @@ ULONG DistributionInfo::QueryUid(std::wstring_view userName)
     SECURITY_ATTRIBUTES sa{sizeof(sa), nullptr, true};
     ULONG uid = UID_INVALID;
     if (CreatePipe(&readPipe, &writePipe, &sa, 0)) {
-        // Query the UID of the supplied username.
-        std::wstring command = L"/usr/bin/id -u ";
-        command += userName;
         int returnValue = 0;
         HANDLE child;
         HRESULT hr = g_wslApi.WslLaunch(command.c_str(), true, GetStdHandle(STD_INPUT_HANDLE), writePipe, GetStdHandle(STD_ERROR_HANDLE), &child);
@@ -51,7 +48,6 @@ ULONG DistributionInfo::QueryUid(std::wstring_view userName)
                     buffer[bytesRead] = ANSI_NULL;
                     try {
                         uid = std::stoul(buffer, nullptr, 10);
-
                     } catch( ... ) { }
                 }
             }
@@ -62,4 +58,11 @@ ULONG DistributionInfo::QueryUid(std::wstring_view userName)
     }
 
     return uid;
+}
+
+ULONG DistributionInfo::QueryUid(std::wstring_view userName)
+{
+    std::wstring command = L"/usr/bin/id -u ";
+    command += userName;
+    return _QueryUid(command);
 }
